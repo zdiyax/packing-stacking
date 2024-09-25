@@ -46,6 +46,24 @@ const docTemplate = `{
                 }
             }
         },
+        "/packs/calculate/{quantity}": {
+            "get": {
+                "description": "Calculates the needed packs combination for a given quantity",
+                "summary": "Calculate packs",
+                "operationId": "calculate-packs",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/packs/list": {
             "get": {
                 "description": "List all available packs",
@@ -63,6 +81,27 @@ const docTemplate = `{
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/packs/remove/{quantity}": {
+            "get": {
+                "description": "Removes a pack with a certain quantity",
+                "summary": "Remove pack",
+                "operationId": "remove-pack",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Quantity",
+                        "name": "quantity",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     }
                 }
             }

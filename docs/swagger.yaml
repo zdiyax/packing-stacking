@@ -30,6 +30,18 @@ paths:
         "200":
           description: OK
       summary: Add pack
+  /packs/calculate/{quantity}:
+    get:
+      description: Calculates the needed packs combination for a given quantity
+      operationId: calculate-packs
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+      summary: Calculate packs
   /packs/list:
     get:
       description: List all available packs
@@ -44,4 +56,18 @@ paths:
               type: array
             type: array
       summary: List packs
+  /packs/remove/{quantity}:
+    get:
+      description: Removes a pack with a certain quantity
+      operationId: remove-pack
+      parameters:
+      - description: Quantity
+        in: path
+        name: quantity
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+      summary: Remove pack
 swagger: "2.0"
