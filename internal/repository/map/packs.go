@@ -8,11 +8,16 @@ import (
 )
 
 type packsMapRepository struct {
-	m sync.Map
+	m *sync.Map
 }
 
 func NewPacksMapRepository() repository.PacksRepository {
-	return &packsMapRepository{m: sync.Map{}}
+	m := &sync.Map{}
+	m.Store(100, &domain.Pack{Quantity: 100})
+	m.Store(250, &domain.Pack{Quantity: 250})
+	m.Store(500, &domain.Pack{Quantity: 500})
+
+	return &packsMapRepository{m: m}
 }
 
 func (r *packsMapRepository) Insert(p domain.Pack) error {
