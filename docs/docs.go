@@ -25,7 +25,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/packs/add/{quantity}": {
+        "/packs/add": {
             "get": {
                 "description": "Add a new pack with unique quantity",
                 "summary": "Add pack",
@@ -46,11 +46,20 @@ const docTemplate = `{
                 }
             }
         },
-        "/packs/calculate/{quantity}": {
+        "/packs/calculate": {
             "get": {
                 "description": "Calculates the needed packs combination for a given quantity",
                 "summary": "Calculate packs",
                 "operationId": "calculate-packs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Quantity",
+                        "name": "quantity",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -85,7 +94,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/packs/remove/{quantity}": {
+        "/packs/remove": {
             "get": {
                 "description": "Removes a pack with a certain quantity",
                 "summary": "Remove pack",
@@ -129,6 +138,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

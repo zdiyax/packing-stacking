@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"packing-stacking/internal/domain"
 	"strconv"
@@ -33,7 +34,7 @@ func NewPacksHandler() Handler {
 // @ID add-pack
 // @Param quantity path int true "Quantity"
 // @Success 200
-// @Router /packs/add/{quantity} [get]
+// @Router /packs/add [get]
 func (h PacksHandler) Add(c echo.Context) error {
 	quantity := c.QueryParam("quantity")
 
@@ -74,9 +75,11 @@ func (h PacksHandler) List(c echo.Context) error {
 // @ID remove-pack
 // @Param quantity path int true "Quantity"
 // @Success 200
-// @Router /packs/remove/{quantity} [get]
+// @Router /packs/remove [get]
 func (h PacksHandler) Remove(c echo.Context) error {
 	quantity := c.QueryParam("quantity")
+
+	fmt.Println(quantity)
 
 	i, err := strconv.Atoi(quantity)
 	if err != nil {
@@ -88,15 +91,20 @@ func (h PacksHandler) Remove(c echo.Context) error {
 		return err
 	}
 
-	return c.String(http.StatusOK, quantity)
+	packs, err := h.svc.List()
+	if err != nil {
+		return err
+	}
 
+	return c.Render(http.StatusOK, "index.html", packs)
 }
 
 // @Summary Calculate packs
 // @Description Calculates the needed packs combination for a given quantity
 // @ID calculate-packs
+// @Param quantity path int true "Quantity"
 // @Success 200 {object} map[domain.Pack]int
-// @Router /packs/calculate/{quantity} [get]
+// @Router /packs/calculate [get]
 func (h PacksHandler) Calculate(c echo.Context) error {
 	quantityParam := c.QueryParam("quantity")
 

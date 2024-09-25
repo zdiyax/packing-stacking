@@ -56,7 +56,7 @@ func main() {
 	users := e.Group("/packs")
 	users.Add(echo.GET, "/add", handler.Add)
 	users.Add(echo.GET, "/list", handler.List)
-	users.Add(echo.DELETE, "/remove", handler.Remove)
+	users.Add(echo.GET, "/remove", handler.Remove)
 	users.Add(echo.GET, "/calculate", handler.Calculate)
 
 	// specifics of Heroku deployment
