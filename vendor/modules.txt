@@ -12,6 +12,7 @@ github.com/PuerkitoBio/urlesc
 github.com/brpaz/echozap
 # github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 ## explicit
+github.com/davecgh/go-spew/spew
 # github.com/ghodss/yaml v1.0.0
 ## explicit
 github.com/ghodss/yaml
@@ -50,8 +51,10 @@ github.com/mattn/go-colorable
 github.com/mattn/go-isatty
 # github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2
 ## explicit
+github.com/pmezard/go-difflib/difflib
 # github.com/stretchr/testify v1.9.0
 ## explicit; go 1.17
+github.com/stretchr/testify/assert
 # github.com/swaggo/echo-swagger v1.4.1
 ## explicit; go 1.17
 github.com/swaggo/echo-swagger
@@ -113,3 +116,6 @@ golang.org/x/tools/internal/typeparams
 # gopkg.in/yaml.v2 v2.4.0
 ## explicit; go 1.15
 gopkg.in/yaml.v2
+# gopkg.in/yaml.v3 v3.0.1
+## explicit
+gopkg.in/yaml.v3

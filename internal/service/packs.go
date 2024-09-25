@@ -40,9 +40,9 @@ func (svc packsService) Calculate(quantity int) (map[int]int, error) {
 	}
 
 	calculation := make(map[int]int)
-	minPacks := make(map[int]int)       // Map to track the minimum combination
-	minPacksCount := int(^uint(0) >> 1) // Set to a large number (infinity)
-	minExcess := int(^uint(0) >> 1)     // Set to a large number to track the smallest overfill
+	minPacks := make(map[int]int)
+	minPacksCount := int(^uint(0) >> 1) // Set to a large number
+	minExcess := int(^uint(0) >> 1)     // Set to a large number
 
 	var backtrack func(remainingItems int, packIdx int, currentCombo map[int]int, packCount int)
 
@@ -51,10 +51,12 @@ func (svc packsService) Calculate(quantity int) (map[int]int, error) {
 		if remainingItems <= 0 {
 			excess := -remainingItems // How much we've overpacked
 			// Prefer the combination that minimizes the number of packs, and if equal, the smallest overfill
-			if packCount < minPacksCount || (packCount == minPacksCount && excess < minExcess) {
+			if excess < minExcess || (excess == minExcess && packCount < minPacksCount) {
 				minPacksCount = packCount
 				minExcess = excess
 				// Copy the current combination to the result
+				minPacks = make(map[int]int)
+
 				for k, v := range currentCombo {
 					minPacks[k] = v
 				}
@@ -65,13 +67,11 @@ func (svc packsService) Calculate(quantity int) (map[int]int, error) {
 		// Try all packs starting from the current index
 		for i := packIdx; i < len(packs); i++ {
 			pack := packs[i]
-			if remainingItems >= pack.Quantity {
-				currentCombo[pack.Quantity]++
-				backtrack(remainingItems-pack.Quantity, i, currentCombo, packCount+1)
-				currentCombo[pack.Quantity]-- // Backtrack
-				if currentCombo[pack.Quantity] == 0 {
-					delete(currentCombo, pack.Quantity) // Clean up map
-				}
+			currentCombo[pack.Quantity]++
+			backtrack(remainingItems-pack.Quantity, i, currentCombo, packCount+1)
+			currentCombo[pack.Quantity]-- // Backtrack
+			if currentCombo[pack.Quantity] == 0 {
+				delete(currentCombo, pack.Quantity) // Clean up map
 			}
 		}
 	}
