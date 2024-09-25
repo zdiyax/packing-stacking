@@ -33,25 +33,12 @@ import (
 func main() {
 	e := echo.New()
 
-	// viper.AutomaticEnv()
-	//viper.SetConfigType("env")
-	//viper.AddConfigPath(".env")
-	//err := viper.ReadInConfig()
-	//if err != nil {
-	//	return
-	//}
+	// temporarily commented because of specifics of Heroku deployment
+	//viper.AutomaticEnv()
 
 	// Logger
 	logger, _ := zap.NewProduction()
 	e.Use(echozap.ZapLogger(logger))
-
-	t := &Template{
-		templates: template.Must(template.ParseGlob("public/views/index.html")),
-	}
-	e.Renderer = t
-	e.GET("/", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "index.html", nil)
-	})
 
 	e.GET("/swagger/*", swag.WrapHandler)
 	e.GET("/healthz", func(c echo.Context) error {
@@ -59,16 +46,27 @@ func main() {
 	})
 
 	handler := handlers.NewPacksHandler()
+	t := &Template{
+		templates: template.Must(template.ParseGlob("public/views/*.html")),
+	}
+	e.Renderer = t
+	e.GET("/", handler.Index)
 
 	// Packs router group
 	users := e.Group("/packs")
 	users.Add(echo.GET, "/add", handler.Add)
 	users.Add(echo.GET, "/list", handler.List)
-	users.Add(echo.GET, "/remove/:quantity", handler.Remove)
-	users.Add(echo.GET, "/calculate/:quantity", handler.Calculate)
+	users.Add(echo.DELETE, "/remove", handler.Remove)
+	users.Add(echo.GET, "/calculate", handler.Calculate)
+
+	// specifics of Heroku deployment
+	port := ":" + os.Getenv("PORT")
+	if port == "" {
+		port = ":1234"
+	}
 
 	go func() {
-		if serverErr := e.Start(":" + os.Getenv("PORT")); serverErr != nil && serverErr != http.ErrServerClosed {
+		if serverErr := e.Start(port); serverErr != nil && serverErr != http.ErrServerClosed {
 			e.Logger.Fatal("shutting down the server")
 		}
 	}()

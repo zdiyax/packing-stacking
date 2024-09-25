@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<hr>
+
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Pack</th>
+                <th scope="col">Quantity</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{ if . }}
+            {{ range $key, $value := . }}
+            <tr>
+                <td>{{ $key }}</td>
+                <td>{{ $value }}</td>
+            </tr>
+            {{ end }}
+            {{ else }}
+            <tr>
+                <td colspan="3" class="text-center">No packs available.</td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -2,6 +2,7 @@ package _map
 
 import (
 	"packing-stacking/internal/repository"
+	"sort"
 	"sync"
 
 	"packing-stacking/internal/domain"
@@ -13,9 +14,9 @@ type packsMapRepository struct {
 
 func NewPacksMapRepository() repository.PacksRepository {
 	m := &sync.Map{}
-	m.Store(100, &domain.Pack{Quantity: 100})
-	m.Store(250, &domain.Pack{Quantity: 250})
-	m.Store(500, &domain.Pack{Quantity: 500})
+	m.Store(int(100), &domain.Pack{Quantity: 100})
+	m.Store(int(250), &domain.Pack{Quantity: 250})
+	m.Store(int(500), &domain.Pack{Quantity: 500})
 
 	return &packsMapRepository{m: m}
 }
@@ -40,6 +41,10 @@ func (r *packsMapRepository) List() ([]domain.Pack, error) {
 
 		result = append(result, *pack)
 		return true
+	})
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Quantity > result[j].Quantity
 	})
 
 	return result, nil
