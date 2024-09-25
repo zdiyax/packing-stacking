@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"html/template"
+	"io"
 	"net/http"
 	"os"
 	"os/signal"
@@ -43,6 +45,14 @@ func main() {
 	logger, _ := zap.NewProduction()
 	e.Use(echozap.ZapLogger(logger))
 
+	t := &Template{
+		templates: template.Must(template.ParseGlob("public/views/*.html")),
+	}
+	e.Renderer = t
+	e.GET("/", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "index.html", nil)
+	})
+
 	e.GET("/swagger/*", swag.WrapHandler)
 	e.GET("/healthz", func(c echo.Context) error {
 		return c.String(http.StatusOK, "i'm up!")
@@ -52,7 +62,7 @@ func main() {
 
 	// Packs router group
 	users := e.Group("/packs")
-	users.Add(echo.GET, "/add/:quantity", handler.Add)
+	users.Add(echo.GET, "/add", handler.Add)
 	users.Add(echo.GET, "/list", handler.List)
 	users.Add(echo.GET, "/remove/:quantity", handler.Remove)
 	users.Add(echo.GET, "/calculate/:quantity", handler.Calculate)
@@ -74,4 +84,12 @@ func main() {
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
 	}
+}
+
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
 }

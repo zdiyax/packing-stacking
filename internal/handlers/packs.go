@@ -34,7 +34,7 @@ func NewPacksHandler() Handler {
 // @Success 200
 // @Router /packs/add/{quantity} [get]
 func (h PacksHandler) Add(c echo.Context) error {
-	quantity := c.Param("quantity")
+	quantity := c.QueryParam("quantity")
 
 	i, err := strconv.ParseInt(quantity, 10, 64)
 	if err != nil {
