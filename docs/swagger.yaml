@@ -1,0 +1,47 @@
+definitions:
+  domain.Pack:
+    properties:
+      quantity:
+        type: integer
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Packing Stacking API
+  version: "1.0"
+paths:
+  /packs/add/{quantity}:
+    get:
+      description: Add a new pack with unique quantity
+      operationId: add-pack
+      parameters:
+      - description: Quantity
+        in: path
+        name: quantity
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+      summary: Add pack
+  /packs/list:
+    get:
+      description: List all available packs
+      operationId: list-packs
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/domain.Pack'
+              type: array
+            type: array
+      summary: List packs
+swagger: "2.0"
