@@ -68,7 +68,7 @@ func main() {
 	users.Add(echo.GET, "/calculate/:quantity", handler.Calculate)
 
 	go func() {
-		if serverErr := e.Start(":8080"); serverErr != nil && serverErr != http.ErrServerClosed {
+		if serverErr := e.Start(os.Getenv("PORT")); serverErr != nil && serverErr != http.ErrServerClosed {
 			e.Logger.Fatal("shutting down the server")
 		}
 	}()
